@@ -35,7 +35,7 @@ Experiments on three aerial benchmarks show that our FSFNet ranks first in **11 
 
 <div align="center">
 
-![Motivation](docs/figures/motivation.png)
+![Motivation](/figures/motivation.png)
 
 *Overview of the unpaired aerial visible-to-infrared translation problem and the two key challenges motivating this work.*
 
@@ -55,7 +55,7 @@ Experiments on three aerial benchmarks show that our FSFNet ranks first in **11 
 
 <div align="center">
 
-![Framework](docs/figures/framework.png)
+![Framework](/figures/framework.png)
 
 *Overall architecture of the proposed FSFNet. The spatial structure encoder E<sub>s</sub> and the discrete wavelet frequency encoder E<sub>f</sub> extract complementary representations in parallel.*
 
@@ -82,7 +82,7 @@ FSFNet is a dual-path encoder-decoder framework that explicitly decouples multis
 #### (a) AVIID-3
 
 | Method | FID↓ | KID↓ | LPIPS↓ | RMSE↓ | SSIM↑ | PSNR↑ |
-|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|
 | Pix2Pix | 84.24536 | 0.039870 | 0.284519 | 29.989248 | 0.515265 | 18.956686 |
 | CycleGAN | 82.14132 | 0.025350 | 0.300864 | 37.436294 | 0.404162 | 16.847453 |
 | CUT | 95.33009 | 0.033596 | 0.350033 | 38.927721 | 0.405757 | 16.492552 |
@@ -97,7 +97,7 @@ FSFNet is a dual-path encoder-decoder framework that explicitly decouples multis
 #### (b) Day-DroneVehicle
 
 | Method | FID↓ | KID↓ | LPIPS↓ | RMSE↓ | SSIM↑ | PSNR↑ |
-|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|
 | Pix2Pix | 160.00029 | 0.137296 | 0.313117 | 54.334250 | 0.353191 | 13.638398 |
 | CycleGAN | 94.05906 | 0.054729 | 0.342277 | 58.777830 | 0.268798 | 12.877211 |
 | CUT | 445.85667 | 0.532393 | 0.684109 | 73.757324 | 0.063644 | 10.802577 |
@@ -112,7 +112,7 @@ FSFNet is a dual-path encoder-decoder framework that explicitly decouples multis
 #### (c) Night-DroneVehicle
 
 | Method | FID↓ | KID↓ | LPIPS↓ | RMSE↓ | SSIM↑ | PSNR↑ |
-|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|
 | Pix2Pix | 83.18299 | 0.072839 | 0.347109 | 50.658449 | 0.358204 | 14.140496 |
 | CycleGAN | 50.52592 | 0.030129 | 0.391831 | 55.457723 | 0.304812 | 13.385118 |
 | CUT | 79.82762 | 0.062109 | 0.402816 | 56.226394 | 0.329726 | 13.237177 |
@@ -178,15 +178,15 @@ Qualitative comparisons between FSFNet and nine competitive baselines. Five repr
 
 <div align="center">
 
-![AVIID-3](docs/figures/vis_aviid.jpg)
+![AVIID-3](/figures/vis_aviid.jpg)
 
 *Qualitative comparison on the **AVIID-3** dataset.*
 
-![Day-DroneVehicle](docs/figures/vis_day.jpg)
+![Day-DroneVehicle](/figures/vis_day.jpg)
 
 *Qualitative comparison on the **Day-DroneVehicle** dataset under challenging daytime scenarios.*
 
-![Night-DroneVehicle](docs/figures/vis_night.jpg)
+![Night-DroneVehicle](/figures/vis_night.jpg)
 
 *Qualitative comparison on the **Night-DroneVehicle** dataset under low-light nighttime environments.*
 
