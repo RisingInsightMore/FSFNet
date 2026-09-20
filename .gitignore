@@ -1,0 +1,29 @@
+# ------------------------------------------------------------------
+# This repository contains ONLY the project page of the FSFNet paper.
+# (README.md + docs/ GitHub Pages site). Everything else is local-only.
+# ------------------------------------------------------------------
+
+# ---- Paper sources / LaTeX build artifacts ----
+/FSFNet.tex
+/FSFNet.pdf
+/FSFNet.aux
+/FSFNet.log
+/FSFNet.out
+/FSFNet.bbl
+/FSFNet.blg
+/FSFNet.synctex.gz
+/ref.bib
+/figures/
+
+# ---- Local archive of the previous (AAAI 2027) project page ----
+/anonymous/
+/anonymous_AAAI2027_backup/
+
+# ---- Agent workspace metadata ----
+/.workbuddy/
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
