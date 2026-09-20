@@ -115,14 +115,14 @@
     <h3 class="subsection-title">Comparison with State-of-the-Art Methods</h3>
 
     <div class="tab-group">
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="aviid">AVIID-3</button>
-        <button class="tab-btn" data-tab="day">Day-DroneVehicle</button>
-        <button class="tab-btn" data-tab="night">Night-DroneVehicle</button>
+    <div class="tabs" role="tablist" aria-label="Dataset for the state-of-the-art comparison">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="aviid">AVIID-3</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="day">Day-DroneVehicle</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="night">Night-DroneVehicle</button>
     </div>
 
     <!-- ========== Tab 1: AVIID-3 ========== -->
-    <div id="tab-aviid" class="tab-content active">
+    <div id="tab-aviid" class="tab-content active" role="tabpanel">
         <div class="table-wrapper">
             <p class="table-caption">(a) Quantitative comparison on the AVIID-3 dataset.</p>
             <table>
@@ -182,7 +182,7 @@
     </div>
 
     <!-- ========== Tab 2: Day-DroneVehicle ========== -->
-    <div id="tab-day" class="tab-content">
+    <div id="tab-day" class="tab-content" role="tabpanel">
         <div class="table-wrapper">
             <p class="table-caption">(b) Quantitative comparison on the Day-DroneVehicle dataset.</p>
             <table>
@@ -242,7 +242,7 @@
     </div>
 
     <!-- ========== Tab 3: Night-DroneVehicle ========== -->
-    <div id="tab-night" class="tab-content">
+    <div id="tab-night" class="tab-content" role="tabpanel">
         <div class="table-wrapper">
             <p class="table-caption">(c) Quantitative comparison on the Night-DroneVehicle dataset.</p>
             <table>
@@ -304,28 +304,27 @@
     </div><!-- /tab-group: comparison -->
 
     <h3 class="subsection-title">Ablation Study</h3>
-    <p>Component-wise ablation on each benchmark. Configuration&nbsp;0 is the purely spatial baseline (the USTNet architecture without frequency modeling); Configuration&nbsp;1 introduces the dual-path architecture; Configuration&nbsp;2 further adds the frequency-preserving loss; and Configuration&nbsp;3 is the full FSFNet, which further incorporates GAGM. The best result in each column is highlighted in <strong>bold</strong>; &#10003; / &#10007; indicates whether a component is adopted.</p>
 
     <div class="tab-group">
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="abl-aviid">AVIID-3</button>
-        <button class="tab-btn" data-tab="abl-day">Day-DroneVehicle</button>
-        <button class="tab-btn" data-tab="abl-night">Night-DroneVehicle</button>
+    <div class="tabs" role="tablist" aria-label="Dataset for the ablation study">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="abl-aviid">AVIID-3</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="abl-day">Day-DroneVehicle</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="abl-night">Night-DroneVehicle</button>
     </div>
 
     <!-- ========== Ablation: AVIID-3 ========== -->
-    <div id="tab-abl-aviid" class="tab-content active">
+    <div id="tab-abl-aviid" class="tab-content active" role="tabpanel">
         <div class="table-wrapper">
             <p class="table-caption">(a) Ablation results on the AVIID-3 dataset.</p>
             <table>
                 <thead>
                     <tr>
-                        <th rowspan="2">N</th>
+                        <th rowspan="2" title="Configuration: 0 = purely spatial baseline (USTNet without frequency modeling), 1 = +dual-path architecture, 2 = +frequency-preserving loss, 3 = +GAGM (full FSFNet)">N</th>
                         <th colspan="3">Component</th>
                         <th colspan="6">Metric</th>
                     </tr>
                     <tr>
-                        <th>dual-path</th><th>freq. loss</th><th>GAGM</th>
+                        <th title="Dual-path spatial-frequency architecture (&#10003; = adopted)">dual-path</th><th title="Frequency-preserving loss (&#10003; = adopted)">freq. loss</th><th title="Granularity-aware adaptive gating mechanism (&#10003; = adopted)">GAGM</th>
                         <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
                     </tr>
                 </thead>
@@ -349,22 +348,21 @@
                 </tbody>
             </table>
         </div>
-        <p>Adding GAGM (Configuration&nbsp;3) delivers further gains across all six metrics, yielding an overall <strong>0.65&nbsp;dB increase in PSNR</strong> and an <strong>11.5% reduction in FID</strong> compared with Configuration&nbsp;0. The consistent improvement from Configuration&nbsp;2 to 3 indicates that adaptive granularity-aware modulation improves the utilization of the decoupled frequency representations.</p>
     </div>
 
     <!-- ========== Ablation: Day-DroneVehicle ========== -->
-    <div id="tab-abl-day" class="tab-content">
+    <div id="tab-abl-day" class="tab-content" role="tabpanel">
         <div class="table-wrapper">
             <p class="table-caption">(b) Ablation results on the Day-DroneVehicle dataset.</p>
             <table>
                 <thead>
                     <tr>
-                        <th rowspan="2">N</th>
+                        <th rowspan="2" title="Configuration: 0 = purely spatial baseline (USTNet without frequency modeling), 1 = +dual-path architecture, 2 = +frequency-preserving loss, 3 = +GAGM (full FSFNet)">N</th>
                         <th colspan="3">Component</th>
                         <th colspan="6">Metric</th>
                     </tr>
                     <tr>
-                        <th>dual-path</th><th>freq. loss</th><th>GAGM</th>
+                        <th title="Dual-path spatial-frequency architecture (&#10003; = adopted)">dual-path</th><th title="Frequency-preserving loss (&#10003; = adopted)">freq. loss</th><th title="Granularity-aware adaptive gating mechanism (&#10003; = adopted)">GAGM</th>
                         <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
                     </tr>
                 </thead>
@@ -388,22 +386,21 @@
                 </tbody>
             </table>
         </div>
-        <p>While the dual-path architecture alone (Configuration&nbsp;1) improves distribution alignment, adding the frequency-preserving loss without gating (Configuration&nbsp;2) degrades performance across all metrics &mdash; daytime visible inputs contain abundant non-target background textures, so uniformly enforcing frequency reconstruction injects undesired high-frequency responses. Introducing GAGM (Configuration&nbsp;3) reverses these degradations and yields the best performance across all six metrics.</p>
     </div>
 
     <!-- ========== Ablation: Night-DroneVehicle ========== -->
-    <div id="tab-abl-night" class="tab-content">
+    <div id="tab-abl-night" class="tab-content" role="tabpanel">
         <div class="table-wrapper">
             <p class="table-caption">(c) Ablation results on the Night-DroneVehicle dataset.</p>
             <table>
                 <thead>
                     <tr>
-                        <th rowspan="2">N</th>
+                        <th rowspan="2" title="Configuration: 0 = purely spatial baseline (USTNet without frequency modeling), 1 = +dual-path architecture, 2 = +frequency-preserving loss, 3 = +GAGM (full FSFNet)">N</th>
                         <th colspan="3">Component</th>
                         <th colspan="6">Metric</th>
                     </tr>
                     <tr>
-                        <th>dual-path</th><th>freq. loss</th><th>GAGM</th>
+                        <th title="Dual-path spatial-frequency architecture (&#10003; = adopted)">dual-path</th><th title="Frequency-preserving loss (&#10003; = adopted)">freq. loss</th><th title="Granularity-aware adaptive gating mechanism (&#10003; = adopted)">GAGM</th>
                         <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
                     </tr>
                 </thead>
@@ -427,11 +424,8 @@
                 </tbody>
             </table>
         </div>
-        <p>Under the severe domain discrepancy of nighttime conditions, the dual-path architecture without explicit frequency supervision (Configuration&nbsp;1) degrades substantially (FID 18.39930 &rarr; 58.47422). The frequency-preserving loss (Configuration&nbsp;2) recovers performance, and GAGM (Configuration&nbsp;3) attains the lowest FID, KID and LPIPS as well as the highest SSIM. Configuration&nbsp;0 remains marginally better on RMSE and PSNR (by only 0.13 and 0.009&nbsp;dB), whereas Configuration&nbsp;3 achieves better overall perceptual and structural consistency.</p>
     </div>
     </div><!-- /tab-group: ablation -->
-
-    <p>Overall, the three components play complementary roles: the dual-path architecture enables decoupled frequency representations, the frequency-preserving loss provides explicit wavelet-domain supervision, and GAGM adaptively modulates frequency responses according to local spatial granularity. Their combination consistently improves the perceptual and structural quality of cross-modal translation across the evaluated scenarios.</p>
 
     <h3 class="subsection-title">Computational Complexity</h3>
     <div class="table-wrapper">

@@ -7,9 +7,13 @@ document.querySelectorAll('.tab-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
         var group = this.closest('.tab-group');
         if (!group) return;
-        group.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+        group.querySelectorAll('.tab-btn').forEach(function (b) {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+        });
         group.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
         this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
         var target = group.querySelector('.tab-content[id="tab-' + this.dataset.tab + '"]');
         if (target) target.classList.add('active');
     });

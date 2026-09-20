@@ -126,8 +126,6 @@ FSFNet is a dual-path encoder-decoder framework that explicitly decouples multis
 
 ### Ablation Study
 
-Component-wise ablation on each benchmark. Configuration 0 is the purely spatial baseline (the USTNet architecture without frequency modeling); Configuration 1 introduces the dual-path architecture; Configuration 2 further adds the frequency-preserving loss; and Configuration 3 is the full FSFNet, which further incorporates GAGM. The best result in each column is highlighted in **bold**; ✓ / ✗ indicates whether a component is adopted.
-
 #### (a) AVIID-3
 
 | N | dual-path | freq. loss | GAGM | FID↓ | KID↓ | LPIPS↓ | RMSE↓ | SSIM↑ | PSNR↑ |
@@ -136,8 +134,6 @@ Component-wise ablation on each benchmark. Configuration 0 is the purely spatial
 | 1 | ✓ | ✗ | ✗ | 46.19873 | 0.005581 | 0.204816 | 25.874743 | 0.573891 | 20.171928 |
 | 2 | ✓ | ✓ | ✗ | 45.42301 | 0.005299 | 0.196854 | 24.538258 | 0.582915 | 20.591140 |
 | 3 | ✓ | ✓ | ✓ | **45.00005** | **0.004547** | **0.194302** | **23.714777** | **0.584978** | **20.851626** |
-
-Adding GAGM (Configuration 3) delivers further gains across all six metrics, yielding an overall **0.65 dB increase in PSNR** and an **11.5% reduction in FID** compared with Configuration 0.
 
 #### (b) Day-DroneVehicle
 
@@ -148,8 +144,6 @@ Adding GAGM (Configuration 3) delivers further gains across all six metrics, yie
 | 2 | ✓ | ✓ | ✗ | 27.14012 | 0.002664 | 0.221713 | 49.416147 | 0.487257 | 14.736482 |
 | 3 | ✓ | ✓ | ✓ | **25.16958** | **0.001737** | **0.209149** | **47.153408** | **0.500442** | **15.094191** |
 
-While the dual-path architecture alone (Configuration 1) improves distribution alignment, adding the frequency-preserving loss without gating (Configuration 2) degrades performance across all metrics — daytime visible inputs contain abundant non-target background textures, so uniformly enforcing frequency reconstruction injects undesired high-frequency responses. Introducing GAGM (Configuration 3) reverses these degradations and yields the best performance across all six metrics.
-
 #### (c) Night-DroneVehicle
 
 | N | dual-path | freq. loss | GAGM | FID↓ | KID↓ | LPIPS↓ | RMSE↓ | SSIM↑ | PSNR↑ |
@@ -158,10 +152,6 @@ While the dual-path architecture alone (Configuration 1) improves distribution a
 | 1 | ✓ | ✗ | ✗ | 58.47422 | 0.044026 | 0.363766 | 54.264105 | 0.395591 | 13.556499 |
 | 2 | ✓ | ✓ | ✗ | 19.23238 | 0.004763 | 0.302936 | 49.074746 | 0.443146 | 14.470825 |
 | 3 | ✓ | ✓ | ✓ | **17.95355** | **0.003609** | **0.298798** | 48.991262 | **0.447708** | 14.485825 |
-
-Under the severe domain discrepancy of nighttime conditions, the dual-path architecture without explicit frequency supervision (Configuration 1) degrades substantially (FID 18.39930 → 58.47422). The frequency-preserving loss (Configuration 2) recovers performance, and GAGM (Configuration 3) attains the lowest FID, KID and LPIPS as well as the highest SSIM. Configuration 0 remains marginally better on RMSE and PSNR (by only 0.13 and 0.009 dB), whereas Configuration 3 achieves better overall perceptual and structural consistency.
-
-Overall, the three components play complementary roles: the dual-path architecture enables decoupled frequency representations, the frequency-preserving loss provides explicit wavelet-domain supervision, and GAGM adaptively modulates frequency responses according to local spatial granularity. Their combination consistently improves the perceptual and structural quality of cross-modal translation across the evaluated scenarios.
 
 ### Computational Complexity
 
