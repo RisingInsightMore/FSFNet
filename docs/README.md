@@ -35,7 +35,7 @@ Experiments on three aerial benchmarks show that our FSFNet ranks first in **11 
 
 <div align="center">
 
-![Motivation](/figures/motivation.png)
+![Motivation](figures/motivation.png)
 
 *Overview of the unpaired aerial visible-to-infrared translation problem and the two key challenges motivating this work.*
 
@@ -55,7 +55,7 @@ Experiments on three aerial benchmarks show that our FSFNet ranks first in **11 
 
 <div align="center">
 
-![Framework](/figures/framework.png)
+![Framework](figures/framework.png)
 
 *Overall architecture of the proposed FSFNet. The spatial structure encoder E<sub>s</sub> and the discrete wavelet frequency encoder E<sub>f</sub> extract complementary representations in parallel.*
 
@@ -178,15 +178,15 @@ Qualitative comparisons between FSFNet and nine competitive baselines. Five repr
 
 <div align="center">
 
-![AVIID-3](/figures/vis_aviid.jpg)
+![AVIID-3](figures/vis_aviid.jpg)
 
 *Qualitative comparison on the **AVIID-3** dataset.*
 
-![Day-DroneVehicle](/figures/vis_day.jpg)
+![Day-DroneVehicle](figures/vis_day.jpg)
 
 *Qualitative comparison on the **Day-DroneVehicle** dataset under challenging daytime scenarios.*
 
-![Night-DroneVehicle](/figures/vis_night.jpg)
+![Night-DroneVehicle](figures/vis_night.jpg)
 
 *Qualitative comparison on the **Night-DroneVehicle** dataset under low-light nighttime environments.*
 
