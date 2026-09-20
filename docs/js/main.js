@@ -1,13 +1,16 @@
 // FSFNet project page - tab switching and navbar highlighting
 
-// Tab switching (dataset comparison tables)
+// Tab switching. Each tab set lives inside its own .tab-group, so several
+// independent tab sets can coexist in one section (e.g. the SOTA comparison
+// tabs and the ablation tabs, both inside #results).
 document.querySelectorAll('.tab-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
-        var group = this.closest('.section');
+        var group = this.closest('.tab-group');
+        if (!group) return;
         group.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
         group.querySelectorAll('.tab-content').forEach(function (c) { c.classList.remove('active'); });
         this.classList.add('active');
-        var target = document.getElementById('tab-' + this.dataset.tab);
+        var target = group.querySelector('.tab-content[id="tab-' + this.dataset.tab + '"]');
         if (target) target.classList.add('active');
     });
 });

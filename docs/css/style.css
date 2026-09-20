@@ -250,6 +250,12 @@ body {
     display: block;
 }
 
+/* Wraps one tab set (buttons + panels) so several independent tab sets
+   can coexist in the same section. */
+.tab-group {
+    margin-bottom: 0.4rem;
+}
+
 /* ===== Tables ===== */
 .table-wrapper {
     overflow-x: auto;
