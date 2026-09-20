@@ -8,12 +8,15 @@ Submitted to *IEEE Journal of Selected Topics in Applied Earth Observations and 
 
 *Corresponding author: Zhifei Zhang.*
 
-> *The code will be released upon paper acceptance to foster reproducibility in the remote sensing community.*
+**Core architecture code has been pre-released in this repository.**
+
+**Project page: <https://risinginsightmore.github.io/FSFNet/>**
 
 [![Venue](https://img.shields.io/badge/Venue-IEEE%20JSTARS%20(Under%20Review)-red)]()
 [![Task](https://img.shields.io/badge/Task-Unpaired%20Aerial%20Visible--to--Infrared%20Translation-blue)]()
 [![Datasets](https://img.shields.io/badge/Datasets-AVIID--3%20%7C%20Day--DroneVehicle%20%7C%20Night--DroneVehicle-green)]()
-[![Code](https://img.shields.io/badge/Code-Coming%20Soon-lightgrey)]()
+[![Project Page](https://img.shields.io/badge/Project%20Page-Live-brightgreen)](https://risinginsightmore.github.io/FSFNet/)
+[![Code](https://img.shields.io/badge/Code-Pre--released-success)](https://github.com/RisingInsightMore/FSFNet)
 
 </div>
 
@@ -213,5 +216,5 @@ If you find this work useful, please consider citing it:
 ---
 
 <div align="center">
-<sub>This work is under review at <em>IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing</em>. The code will be released upon paper acceptance.</sub>
+<sub>This work is under review at <em>IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing</em>. Core architecture code has been pre-released in this repository.</sub>
 </div>
