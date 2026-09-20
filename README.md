@@ -2,9 +2,11 @@
 
 # Frequency-Guided Spatial-Frequency Collaborative Network for Unregistered Aerial Visible-to-Infrared Image Translation
 
-**Li Ying · Zhikun Li · Zhifei Zhang · Yizhang Liu · Mingjian Guang**
+**Li Ying, Zhikun Li, Zhifei Zhang, Member, IEEE, Yizhang Liu, and Mingjian Guang, Member, IEEE**
 
 Submitted to *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing (JSTARS)* · Under Review
+
+*Corresponding author: Zhifei Zhang.*
 
 > *The code will be released upon paper acceptance to foster reproducibility in the remote sensing community.*
 
