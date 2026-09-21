@@ -4,7 +4,7 @@
 
 **Li Ying, Zhikun Li, Zhifei Zhang, Member, IEEE, Yizhang Liu, and Mingjian Guang, Member, IEEE**
 
-Submitted to *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing (JSTARS)* · Under Review
+Prepared for the Special Issue on *Multisource and Multimodal Remote Sensing: Representation, Understanding, Reasoning, and Generation*, IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing (JSTARS)
 
 *Corresponding author: Zhifei Zhang.*
 
@@ -209,12 +209,12 @@ If you find this work useful, please consider citing it:
   journal = {IEEE Journal of Selected Topics in Applied Earth Observations
              and Remote Sensing},
   year    = {2026},
-  note    = {Under review}
+  note    = {Prepared for the IEEE JSTARS Special Issue on Multisource and Multimodal Remote Sensing}
 }
 ```
 
 ---
 
 <div align="center">
-<sub>This work is under review at <em>IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing</em>. Core architecture code has been pre-released in this repository.</sub>
+<sub>This work is being prepared for the IEEE JSTARS Special Issue on Multisource and Multimodal Remote Sensing. Core architecture code has been pre-released in this repository.</sub>
 </div>
