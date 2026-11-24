@@ -1,0 +1,10 @@
+# Tested with Python 3.10, CUDA 12.8 and cuDNN 9.19 on Ubuntu 22.04
+torch==2.11.0
+torchvision
+timm
+numpy
+Pillow
+scikit-image
+lpips
+visdom
+dominate

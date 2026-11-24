@@ -1,0 +1,78 @@
+# ============================================================
+# FSFNet — Frequency-Guided Spatial-Frequency Collaborative Network
+# for Unregistered Aerial Visible-to-Infrared Image Translation
+#
+# This repository contains the project page (docs/) and the source
+# code (ours/ and baseline/).
+# ============================================================
+
+# ---- Paper sources / LaTeX build artifacts (kept local only) ----
+/FSFNet.tex
+/FSFNet.pdf
+/FSFNet.aux
+/FSFNet.log
+/FSFNet.out
+/FSFNet.bbl
+/FSFNet.blg
+/FSFNet.synctex.gz
+/ref.bib
+/figures/
+
+# ---- Datasets and training artifacts ------------------------------
+# These must live OUTSIDE the repository.
+# NOTE: root-anchored on purpose — the baselines ship their own
+#       datasets/ and experiments/ *code* directories, and those must
+#       be kept (e.g. baseline/CUT/experiments/*.py).
+/Datasets/
+/checkpoints/
+/results/
+/experiments/
+/logs/
+outputs/
+
+# ---- Model weights -------------------------------------------------
+# Keep the small upstream weight files that ship with the baselines
+# (e.g. DRAVIT's LPIPS weights), but never commit trained checkpoints.
+*.pth
+*.pt
+*.ckpt
+*.pkl
+!baseline/**/*.pth
+
+# ---- Python --------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- IDE / editor --------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---- OS ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Office lock files ---------------------------------------------
+~$*
+
+# ---- Logs ----------------------------------------------------------
+*.log
+
+# ---- Local backups (never committed) -------------------------------
+/_local_backup*/
+
+# ---- Agent workspace metadata --------------------------------------
+/.workbuddy/

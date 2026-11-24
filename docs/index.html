@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSFNet: Frequency-Guided Spatial-Frequency Collaborative Network for Unregistered Aerial Visible-to-Infrared Image Translation</title>
+    <meta name="description" content="FSFNet: a frequency-guided spatial-frequency collaborative network for unregistered aerial visible-to-infrared image translation. A Haar wavelet frequency encoder, frequency-guided cross-attention (FGCA), a granularity-aware adaptive gating mechanism (GAGM), and a training-only auxiliary wavelet decoder. Submitted to Engineering Applications of Artificial Intelligence.">
+    <meta name="keywords" content="visible-to-infrared image translation, unpaired image translation, wavelet transform, frequency-guided attention, granular computing, unmanned aerial vehicle imagery">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== Fixed Navigation Bar ===== -->
+<nav class="navbar">
+    <span class="brand">FSFNet</span>
+    <div class="nav-links">
+        <a href="#abstract" class="active">Abstract</a>
+        <a href="#motivation">Motivation</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#visualization">Visualization</a>
+        <a href="#code">Code</a>
+    </div>
+    <span class="status">Under Review @ EAAI</span>
+</nav>
+
+<!-- ===== Header ===== -->
+<div class="header">
+    <h1>Frequency-Guided Spatial-Frequency Collaborative Network for Unregistered Aerial Visible-to-Infrared Image Translation</h1>
+    <p class="venue">
+        Submitted to <em>Engineering Applications of Artificial Intelligence</em> (EAAI) &middot; Under Review
+    </p>
+    <p class="code-release">The core architecture code has been pre-released in this repository, and the complete code will be released upon acceptance.</p>
+    <div class="badges">
+        <span>Paper &middot; Under Review</span>
+        <span>Task &middot; Unpaired Aerial Visible-to-Infrared Translation</span>
+        <span>Benchmarks &middot; AVIID-3 / Day-DroneVehicle / Night-DroneVehicle</span>
+        <span>Code &middot; Partially released</span>
+    </div>
+</div>
+
+<!-- ===== Abstract ===== -->
+<div class="section" id="abstract">
+    <h2 class="section-title">Abstract</h2>
+    <p>Thermal infrared imagery enables day-and-night perception from unmanned aerial vehicles, yet large infrared datasets are costly to collect. Visible-to-infrared translation offers a low-cost alternative, but it must be learned from unregistered data because airborne visible and infrared sensors are rarely aligned. The gap between the two modalities varies with frequency and with image region. Low-frequency intensities must be re-mapped from reflectance to thermal radiance, boundaries caused by material or temperature changes persist in both modalities, and many reflection textures have no thermal counterpart. Spatial-domain translators blur thermal boundaries, while uniform frequency guidance transfers visible textures into homogeneous regions.</p>
+    <p>As the contribution to artificial intelligence, we propose a frequency-guided spatial-frequency collaborative network (FSFNet) for unpaired translation. A Haar wavelet encoder separates low- and high-frequency representations, which act as queries in a frequency-guided cross-attention module to retrieve spatial context. A granularity-aware gating mechanism measures local structural complexity with parameter-free variance statistics and balances local smoothing against cross-window detail at each position. An auxiliary wavelet decoder used only in training anchors the shared bottleneck to infrared spectral structure without extra inference cost.</p>
+    <p>As the engineering application, FSFNet generates aerial infrared imagery and, on three public daytime and nighttime drone benchmarks, achieves the best learned perceptual image patch similarity and structural similarity on all three. On the Aerial Visible-to-Infrared Image Dataset (AVIID-3), it reduces the Fr&eacute;chet inception distance by 11.5% and improves the peak signal-to-noise ratio by 0.65&nbsp;dB over a spatial-only baseline.</p>
+
+    <div class="highlight">
+        <strong>Highlights</strong>
+        <ul>
+            <li>The visible-infrared gap in aerial scenes depends on frequency band and image region.</li>
+            <li>Wavelet frequency features act as queries that guide spatial translation.</li>
+            <li>Local structural statistics balance local and cross-window attention by region.</li>
+            <li>A training-only wavelet decoder keeps infrared spectral structure at no test cost.</li>
+            <li>Best perceptual and structural similarity on three public aerial benchmarks.</li>
+        </ul>
+        <strong>Keywords:</strong> Visible-to-infrared image translation &middot; Unpaired image translation &middot; Wavelet transform &middot; Frequency-guided attention &middot; Granular computing &middot; Unmanned aerial vehicle imagery
+    </div>
+</div>
+
+<!-- ===== Motivation and Contributions ===== -->
+<div class="section" id="motivation">
+    <h2 class="section-title">Motivation and Contributions</h2>
+    <div class="figure-container">
+        <img src="figures/motivation.png" alt="Unpaired aerial visible-to-infrared translation and the two failure types that motivate this work">
+        <p class="figure-caption">Unpaired aerial visible-to-infrared translation and the two failure types that motivate this work. Visible and infrared images are formed by reflected light and emitted radiance, and no pixel-level registration is available during training. Spatial-only translators blur thermal boundaries and lose high-frequency detail. Frequency guidance without regional regulation introduces spurious textures in smooth regions and leaves complex regions short of detail.</p>
+    </div>
+    <p>A visible camera records reflected sunlight, whereas an infrared camera records radiance emitted according to surface temperature and emissivity. The modality gap is therefore not uniform across frequency bands or image regions: the low-frequency layout must be re-mapped, structural boundaries should be preserved, and reflection-only textures should be suppressed. These observations define four requirements for unpaired translation: (i) separating the components that need different treatment, (ii) letting them guide translation rather than serve as side information, (iii) determining where high-frequency detail should be preserved, and (iv) retaining infrared spectral structure without paired targets.</p>
+    <p>The main contributions are:</p>
+    <ol class="contributions-list">
+        <li>We formulate the visible-infrared gap in aerial scenes as frequency- and region-dependent and design a dual-path generator around <strong>frequency-guided cross-attention (FGCA)</strong>, in which low- and high-frequency wavelet representations act as attention queries and swap between regular-window and shifted-window streams across layers. The frequency representations are also re-injected at every decoding scale.</li>
+        <li>We propose the <strong>granularity-aware adaptive gating mechanism (GAGM)</strong>, which adapts spatial-frequency fusion to regional complexity through parameter-free structural statistics and a progressive schedule. It reverses the degradation caused by unregulated frequency guidance in texture-rich daytime scenes and suppresses texture artifacts on homogeneous surfaces.</li>
+        <li>We introduce a <strong>training-only auxiliary wavelet decoder</strong> that anchors the shared bottleneck to infrared spectral structure under unpaired supervision at no inference cost.</li>
+        <li>Experiments on three public aerial benchmarks show that FSFNet ranks first in <strong>11 of the 18</strong> metric evaluations and achieves the best LPIPS and SSIM on all datasets. Ablation studies show that the three components are complementary: the auxiliary decoder lowers the nighttime FID of the dual-path model from 58.47 to 19.23, and GAGM further improves all six metrics on all three datasets.</li>
+    </ol>
+</div>
+
+<!-- ===== Method ===== -->
+<div class="section" id="method">
+    <h2 class="section-title">Method</h2>
+    <div class="figure-container">
+        <img src="figures/framework.png" alt="Overall architecture of FSFNet">
+        <p class="figure-caption">Overall architecture of FSFNet. The spatial encoder <em>E<sub>s</sub></em> and the Haar wavelet frequency encoder <em>E<sub>f</sub></em> extract complementary representations in parallel. FGCA uses the low- and high-frequency representations as queries to retrieve spatial context, and GAGM regulates the two attention streams by local structural complexity. The decoder <em>D<sub>s</sub></em> re-injects the frequency representations at every scale, and the auxiliary wavelet decoder <em>D<sub>f</sub></em> is used only during training.</p>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>Requirement</th><th>Component</th><th>Role</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="method">(i) Separate the components</td><td>Haar wavelet frequency encoder <em>E<sub>f</sub></em></td><td>Two-level Haar DWT with an independent branch per subband; LL features form <em>F<sub>low</sub></em>, and LH/HL/HH features form <em>F<sub>high</sub></em></td></tr>
+                <tr><td class="method">(ii) Let them guide translation</td><td>FGCA</td><td><em>F<sub>low</sub></em> and <em>F<sub>high</sub></em> serve as queries over spatial keys and values in regular- and shifted-window streams, and swap streams across layers</td></tr>
+                <tr><td class="method">(iii) Decide where detail is preserved</td><td>GAGM</td><td>A parameter-free variance-based granularity map weights the two streams at each position, phased in by a progressive schedule</td></tr>
+                <tr><td class="method">(iv) Retain infrared spectral structure</td><td>Auxiliary wavelet decoder <em>D<sub>f</sub></em></td><td>Reconstructs real infrared images from predicted Haar subbands in the identity pass; removed at inference</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="figure-container">
+        <img src="figures/fgca.png" alt="Structure of FGCA and GAGM">
+        <p class="figure-caption">Structure of FGCA and GAGM. The low- and high-frequency representations serve as queries for cross-attention on regular (W-MCA) and shifted (SW-MCA) windows, and their window assignment alternates across layers. GAGM weights the two attention streams with a channel gate and a granularity-guided position gate.</p>
+    </div>
+    <div class="figure-container">
+        <img src="figures/strategy.png" alt="Two-stage training strategy of FSFNet">
+        <p class="figure-caption">Two-stage training strategy of FSFNet. Stage 1 pretrains the generator by masked image modeling with pixel and wavelet losses. Stage 2 learns the unpaired translation with adversarial, geometric-consistency, identity, and auxiliary losses. The auxiliary wavelet decoder is removed at inference.</p>
+    </div>
+</div>
+
+<!-- ===== Results ===== -->
+<div class="section" id="results">
+    <h2 class="section-title">Results</h2>
+
+    <div class="highlight">
+        Over the <strong>18 metric evaluations</strong> on the three benchmarks, FSFNet ranks <strong>first in 11</strong> and within the <strong>top two in 16</strong>, and it achieves the best <strong>LPIPS and SSIM</strong> on all three datasets. All methods are trained from scratch with their public code under the same data splits, input resolution, and evaluation protocol. Best results are in <strong>bold</strong> and second-best are <span class="second">underlined</span>; &darr; (&uarr;) indicates that lower (higher) is better.
+    </div>
+
+    <h3 class="subsection-title">Datasets</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dataset</th><th>Illumination</th><th>Total Pairs</th><th>Train / Test</th><th>Resolution (pixels)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="method">AVIID-3</td><td>Daytime</td><td>3,216</td><td>2,412 / 804</td><td>512 &times; 512</td></tr>
+                <tr><td class="method">Day-DroneVehicle</td><td>Daytime</td><td>7,660</td><td>5,745 / 1,915</td><td>640 &times; 512</td></tr>
+                <tr><td class="method">Night-DroneVehicle</td><td>Nighttime</td><td>13,140</td><td>9,855 / 3,285</td><td>640 &times; 512</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p>During training, visible and infrared images are sampled independently, and the aligned test pairs are used only for evaluation. All images are resized to 256&nbsp;&times;&nbsp;256.</p>
+
+    <h3 class="subsection-title">Comparison with State-of-the-Art Methods</h3>
+
+    <div class="tab-group">
+    <div class="tabs" role="tablist" aria-label="Dataset for the state-of-the-art comparison">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="aviid">AVIID-3</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="day">Day-DroneVehicle</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="night">Night-DroneVehicle</button>
+    </div>
+
+    <div id="tab-aviid" class="tab-content active" role="tabpanel">
+        <div class="table-wrapper">
+            <p class="table-caption">(a) Quantitative comparison on the AVIID-3 dataset.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Method</th>
+                        <th colspan="6">Metric</th>
+                    </tr>
+                    <tr>
+                        <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="method">Pix2Pix</td><td>84.24536</td><td>0.039870</td><td>0.284519</td><td>29.989248</td><td>0.515265</td><td>18.956686</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CycleGAN</td><td>82.14132</td><td>0.025350</td><td>0.300864</td><td>37.436294</td><td>0.404162</td><td>16.847453</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CUT</td><td>95.33009</td><td>0.033596</td><td>0.350033</td><td>38.927721</td><td>0.405757</td><td>16.492552</td>
+                    </tr>
+                    <tr>
+                        <td class="method">EnCo</td><td>84.06712</td><td>0.028891</td><td>0.241989</td><td>26.820914</td><td>0.499146</td><td>19.731120</td>
+                    </tr>
+                    <tr>
+                        <td class="method">DR-AVIT</td><td>214.85513</td><td>0.145197</td><td>0.593349</td><td>70.787318</td><td>0.302367</td><td>11.627863</td>
+                    </tr>
+                    <tr>
+                        <td class="method">USTNet</td><td>50.87250</td><td>0.006881</td><td class="second">0.208130</td><td class="second">25.571699</td><td class="second">0.574911</td><td class="second">20.204583</td>
+                    </tr>
+                    <tr>
+                        <td class="method">ImconfuseNet</td><td>97.62250</td><td>0.032440</td><td>0.283797</td><td>33.005892</td><td>0.455096</td><td>17.926994</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CycleMamba</td><td>179.79673</td><td>0.163505</td><td>0.649781</td><td>81.332077</td><td>0.162434</td><td>9.975021</td>
+                    </tr>
+                    <tr>
+                        <td class="method">AECM</td><td class="best">43.26300</td><td class="best">0.001933</td><td>0.246329</td><td>38.473896</td><td>0.466449</td><td>16.835820</td>
+                    </tr>
+                    <tr class="ours">
+                        <td class="method"><strong>FSFNet (Ours)</strong></td><td class="second">45.00005</td><td class="second">0.004547</td><td class="best">0.194302</td><td class="best">23.714777</td><td class="best">0.584978</td><td class="best">20.851626</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-day" class="tab-content" role="tabpanel">
+        <div class="table-wrapper">
+            <p class="table-caption">(b) Quantitative comparison on the Day-DroneVehicle dataset.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Method</th>
+                        <th colspan="6">Metric</th>
+                    </tr>
+                    <tr>
+                        <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="method">Pix2Pix</td><td>160.00029</td><td>0.137296</td><td>0.313117</td><td>54.334250</td><td>0.353191</td><td>13.638398</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CycleGAN</td><td>94.05906</td><td>0.054729</td><td>0.342277</td><td>58.77783</td><td>0.268798</td><td>12.877211</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CUT</td><td>445.85667</td><td>0.532393</td><td>0.684109</td><td>73.757324</td><td>0.063644</td><td>10.802577</td>
+                    </tr>
+                    <tr>
+                        <td class="method">EnCo</td><td>83.00264</td><td>0.048721</td><td>0.299899</td><td>55.599082</td><td>0.376335</td><td>13.553605</td>
+                    </tr>
+                    <tr>
+                        <td class="method">DR-AVIT</td><td>443.69373</td><td>0.452442</td><td>0.853234</td><td>57.026964</td><td>0.343010</td><td>13.132876</td>
+                    </tr>
+                    <tr>
+                        <td class="method">USTNet</td><td>27.91764</td><td>0.003475</td><td class="second">0.216254</td><td class="second">47.719773</td><td class="second">0.486843</td><td class="second">14.992926</td>
+                    </tr>
+                    <tr>
+                        <td class="method">ImconfuseNet</td><td>69.78602</td><td>0.033836</td><td>0.302829</td><td>48.990387</td><td>0.363916</td><td>14.577407</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CycleMamba</td><td>244.53473</td><td>0.199789</td><td>0.741614</td><td>75.562867</td><td>0.129687</td><td>10.700540</td>
+                    </tr>
+                    <tr>
+                        <td class="method">AECM</td><td class="best">25.06893</td><td class="best">0.000781</td><td>0.232957</td><td>54.929075</td><td>0.431469</td><td>13.689555</td>
+                    </tr>
+                    <tr class="ours">
+                        <td class="method"><strong>FSFNet (Ours)</strong></td><td class="second">25.16958</td><td class="second">0.001737</td><td class="best">0.209149</td><td class="best">47.153408</td><td class="best">0.500442</td><td class="best">15.094191</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-night" class="tab-content" role="tabpanel">
+        <div class="table-wrapper">
+            <p class="table-caption">(c) Quantitative comparison on the Night-DroneVehicle dataset.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Method</th>
+                        <th colspan="6">Metric</th>
+                    </tr>
+                    <tr>
+                        <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="method">Pix2Pix</td><td>83.18299</td><td>0.072839</td><td>0.347109</td><td>50.658449</td><td>0.358204</td><td>14.140496</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CycleGAN</td><td>50.52592</td><td>0.030129</td><td>0.391831</td><td>55.457723</td><td>0.304812</td><td>13.385118</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CUT</td><td>79.82762</td><td>0.062109</td><td>0.402816</td><td>56.226394</td><td>0.329726</td><td>13.237177</td>
+                    </tr>
+                    <tr>
+                        <td class="method">EnCo</td><td>137.4847</td><td>0.122597</td><td>0.596731</td><td>63.097004</td><td>0.153195</td><td>12.238241</td>
+                    </tr>
+                    <tr>
+                        <td class="method">DR-AVIT</td><td>39.86782</td><td>0.020800</td><td>0.342772</td><td>52.329855</td><td>0.359702</td><td>13.856874</td>
+                    </tr>
+                    <tr>
+                        <td class="method">USTNet</td><td>18.39930</td><td class="second">0.004124</td><td class="second">0.301192</td><td class="second">48.862267</td><td class="second">0.441370</td><td class="second">14.495124</td>
+                    </tr>
+                    <tr>
+                        <td class="method">ImconfuseNet</td><td>68.15952</td><td>0.048021</td><td>0.365475</td><td class="best">46.865640</td><td>0.335152</td><td class="best">14.856630</td>
+                    </tr>
+                    <tr>
+                        <td class="method">CycleMamba</td><td>311.45272</td><td>0.342749</td><td>0.646167</td><td>63.269658</td><td>0.206319</td><td>12.169338</td>
+                    </tr>
+                    <tr>
+                        <td class="method">AECM</td><td class="best">17.61687</td><td>0.004252</td><td>0.328866</td><td>57.859153</td><td>0.346517</td><td>13.052859</td>
+                    </tr>
+                    <tr class="ours">
+                        <td class="method"><strong>FSFNet (Ours)</strong></td><td class="second">17.95355</td><td class="best">0.003609</td><td class="best">0.298798</td><td>48.991262</td><td class="best">0.447708</td><td>14.485825</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div><!-- /tab-group: comparison -->
+
+    <h3 class="subsection-title">Ablation Study</h3>
+    <p>Config.&nbsp;0 is the spatial-only counterpart of FSFNet. Config.&nbsp;1 adds the dual-path generator (wavelet encoder, FGCA, and multiscale frequency injection), Config.&nbsp;2 further adds the auxiliary wavelet decoder, and Config.&nbsp;3 is the full FSFNet with GAGM.</p>
+
+    <div class="tab-group">
+    <div class="tabs" role="tablist" aria-label="Dataset for the ablation study">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="abl-aviid">AVIID-3</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="abl-day">Day-DroneVehicle</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="abl-night">Night-DroneVehicle</button>
+    </div>
+
+    <div id="tab-abl-aviid" class="tab-content active" role="tabpanel">
+        <div class="table-wrapper">
+            <p class="table-caption">(a) Ablation results on the AVIID-3 dataset.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Config.</th>
+                        <th colspan="3">Component</th>
+                        <th colspan="6">Metric</th>
+                    </tr>
+                    <tr>
+                        <th>Dual-path generator</th><th>Aux. decoder</th><th>GAGM</th>
+                        <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td><td>&#10007;</td><td>&#10007;</td><td>&#10007;</td>
+                        <td>50.87250</td><td>0.006881</td><td>0.208130</td><td>25.571699</td><td>0.574911</td><td>20.204583</td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td>
+                        <td>46.19873</td><td>0.005581</td><td>0.204816</td><td>25.874743</td><td>0.573891</td><td>20.171928</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>&#10003;</td><td>&#10003;</td><td>&#10007;</td>
+                        <td>45.42301</td><td>0.005299</td><td>0.196854</td><td>24.538258</td><td>0.582915</td><td>20.591140</td>
+                    </tr>
+                    <tr class="ours">
+                        <td>3</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td>
+                        <td class="best">45.00005</td><td class="best">0.004547</td><td class="best">0.194302</td><td class="best">23.714777</td><td class="best">0.584978</td><td class="best">20.851626</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-abl-day" class="tab-content" role="tabpanel">
+        <div class="table-wrapper">
+            <p class="table-caption">(b) Ablation results on the Day-DroneVehicle dataset.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Config.</th>
+                        <th colspan="3">Component</th>
+                        <th colspan="6">Metric</th>
+                    </tr>
+                    <tr>
+                        <th>Dual-path generator</th><th>Aux. decoder</th><th>GAGM</th>
+                        <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td><td>&#10007;</td><td>&#10007;</td><td>&#10007;</td>
+                        <td>27.91764</td><td>0.003475</td><td>0.216254</td><td>47.719773</td><td>0.486843</td><td>14.992926</td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td>
+                        <td>25.74340</td><td>0.002036</td><td>0.213349</td><td>48.694017</td><td>0.493474</td><td>14.784883</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>&#10003;</td><td>&#10003;</td><td>&#10007;</td>
+                        <td>27.14012</td><td>0.002664</td><td>0.221713</td><td>49.416147</td><td>0.487257</td><td>14.736482</td>
+                    </tr>
+                    <tr class="ours">
+                        <td>3</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td>
+                        <td class="best">25.16958</td><td class="best">0.001737</td><td class="best">0.209149</td><td class="best">47.153408</td><td class="best">0.500442</td><td class="best">15.094191</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-abl-night" class="tab-content" role="tabpanel">
+        <div class="table-wrapper">
+            <p class="table-caption">(c) Ablation results on the Night-DroneVehicle dataset.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Config.</th>
+                        <th colspan="3">Component</th>
+                        <th colspan="6">Metric</th>
+                    </tr>
+                    <tr>
+                        <th>Dual-path generator</th><th>Aux. decoder</th><th>GAGM</th>
+                        <th>FID&darr;</th><th>KID&darr;</th><th>LPIPS&darr;</th><th>RMSE&darr;</th><th>SSIM&uarr;</th><th>PSNR&uarr;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td><td>&#10007;</td><td>&#10007;</td><td>&#10007;</td>
+                        <td>18.39930</td><td>0.004124</td><td>0.301192</td><td class="best">48.862267</td><td>0.441370</td><td class="best">14.495124</td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td>
+                        <td>58.47422</td><td>0.044026</td><td>0.363766</td><td>54.264105</td><td>0.395591</td><td>13.556499</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>&#10003;</td><td>&#10003;</td><td>&#10007;</td>
+                        <td>19.23238</td><td>0.004763</td><td>0.302936</td><td>49.074746</td><td>0.443146</td><td>14.470825</td>
+                    </tr>
+                    <tr class="ours">
+                        <td>3</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td>
+                        <td class="best">17.95355</td><td class="best">0.003609</td><td class="best">0.298798</td><td>48.991262</td><td class="best">0.447708</td><td>14.485825</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div><!-- /tab-group: ablation -->
+
+    <p>The dual-path generator lowers FID on AVIID-3 and Day-DroneVehicle. At night, where visible frequency cues are weak, the auxiliary decoder brings the FID of the dual-path model back from 58.47 to 19.23; in texture-rich daytime scenes, GAGM reverses the degradation of unregulated frequency guidance. The full model is the most consistent across all three datasets.</p>
+
+    <h3 class="subsection-title">Computational Complexity</h3>
+    <div class="table-wrapper">
+        <p class="table-caption">Model complexity and inference efficiency (input 256&times;256, batch size 1, single NVIDIA GeForce RTX 5090). G, D, and Others list the parameters of the generator, the discriminator, and the remaining modules in millions.</p>
+        <table>
+            <thead>
+                <tr><th>Method</th><th>Params (M)</th><th>FLOPs (G)</th><th>Time (ms)</th><th>G (M)</th><th>D (M)</th><th>Others (M)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="method">Pix2Pix</td><td>57.18</td><td>36.30</td><td>2.00</td><td>54.41</td><td>2.77</td><td>--</td></tr>
+                <tr><td class="method">CycleGAN</td><td>28.29</td><td>113.73</td><td>18.06</td><td>22.76</td><td>5.53</td><td>--</td></tr>
+                <tr><td class="method">CUT</td><td>16.91</td><td>128.26</td><td>6.51</td><td>11.38</td><td>5.53</td><td>--</td></tr>
+                <tr><td class="method">EnCo</td><td>14.66</td><td>128.26</td><td>10.68</td><td>11.38</td><td>2.77</td><td>F: 0.51</td></tr>
+                <tr><td class="method">DR-AVIT</td><td>56.84</td><td>162.67</td><td>24.56</td><td>31.69</td><td>25.15</td><td>--</td></tr>
+                <tr><td class="method">USTNet</td><td>33.69</td><td>69.49</td><td>29.57</td><td>30.92</td><td>2.77</td><td>--</td></tr>
+                <tr><td class="method">ImconfuseNet</td><td>0.28</td><td>32.31</td><td>12.33</td><td>0.26</td><td>0.02</td><td>--</td></tr>
+                <tr><td class="method">CycleMamba</td><td>64.63</td><td>44.78</td><td>27.38</td><td>61.86</td><td>2.77</td><td>--</td></tr>
+                <tr><td class="method">AECM</td><td>27.22</td><td>128.26</td><td>9.23</td><td>11.38</td><td>1.18</td><td>S-Attn: 14.66</td></tr>
+                <tr class="ours"><td class="method"><strong>FSFNet (Ours)</strong></td><td>35.44</td><td>84.30</td><td>36.14</td><td>32.67</td><td>2.77</td><td>--</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p>FSFNet translates a 256&nbsp;&times;&nbsp;256 image in <strong>36.14&nbsp;ms</strong> (about 27.7 images per second) with a single forward pass, and the auxiliary decoder adds no inference cost because it is removed after training. This throughput supports efficient large-scale generation of infrared training data for aerial perception tasks.</p>
+</div>
+
+<!-- ===== Visualization ===== -->
+<div class="section" id="visualization">
+    <h2 class="section-title">Visualization</h2>
+    <p>Qualitative comparison of FSFNet with eight baselines on five representative scenes from each dataset. From left to right: visible input, Pix2Pix, CycleGAN, CUT, EnCo, USTNet, ImconfuseNet, DR-AVIT, AECM, FSFNet, and ground-truth infrared image.</p>
+
+    <div class="figure-container">
+        <img src="figures/vis_aviid.jpg" alt="Qualitative comparison on the AVIID-3 dataset">
+        <p class="figure-caption">Qualitative comparison on the <strong>AVIID-3</strong> dataset. Rows 1 and 2 show urban buildings and vegetation, Row 3 shows a river crossing with a bridge, and Rows 4 and 5 show industrial structures and parking facilities.</p>
+    </div>
+
+    <div class="figure-container">
+        <img src="figures/vis_day.jpg" alt="Qualitative comparison on the Day-DroneVehicle dataset">
+        <p class="figure-caption">Qualitative comparison on the <strong>Day-DroneVehicle</strong> dataset. Rows 1 and 5 show densely packed parking lots, and Rows 2&ndash;4 show multi-lane roads and highways.</p>
+    </div>
+
+    <div class="figure-container">
+        <img src="figures/vis_night.jpg" alt="Qualitative comparison on the Night-DroneVehicle dataset">
+        <p class="figure-caption">Qualitative comparison on the <strong>Night-DroneVehicle</strong> dataset. Rows 1&ndash;3 show urban intersections with headlight glare, and Rows 4 and 5 show dark arterial roads and interchanges.</p>
+    </div>
+</div>
+
+<!-- ===== Code ===== -->
+<div class="section" id="code">
+    <h2 class="section-title">Code Release</h2>
+    <p>The core architecture code has been pre-released in this repository, and the complete code will be released upon acceptance of the paper.</p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>Released now</th><th>Released upon acceptance</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Spatial encoder, Haar wavelet frequency encoder, and multiscale frequency-guided decoder</td><td>Implementation of FGCA and GAGM</td></tr>
+                <tr><td>Two-stage training pipeline: masked-image-modeling pretraining and unpaired translation training</td><td>Implementation of the auxiliary wavelet decoder <em>D<sub>f</sub></em></td></tr>
+                <tr><td>Haar wavelet transform, PatchGAN discriminator, data loading, testing, and evaluation scripts</td><td>Loss implementations and pretrained weights</td></tr>
+                <tr><td>Interfaces of FGCA, GAGM, and <em>D<sub>f</sub></em> with input and output specifications</td><td></td></tr>
+                <tr><td>Training, testing, and evaluation scripts of all compared methods (<code>baseline/</code>)</td><td></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p>See the <a href="https://github.com/RisingInsightMore/FSFNet">repository</a> for the directory structure, data preparation, and usage instructions.</p>
+</div>
+
+<!-- ===== Citation ===== -->
+<div class="section" id="citation">
+    <h2 class="section-title">Citation</h2>
+    <p>The citation will be provided upon publication.</p>
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+    <p>This work is under review at <em>Engineering Applications of Artificial Intelligence</em>.</p>
+    <p>The core architecture code has been pre-released, and the complete code will be released upon acceptance.</p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

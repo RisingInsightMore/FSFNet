@@ -1,0 +1,21 @@
+# Normalize line endings to LF inside the repository, so the code behaves
+# identically on Windows, Linux and the remote training servers.
+* text=auto eol=lf
+
+# Shell scripts must keep LF — they are executed on Linux.
+*.sh text eol=lf
+
+# Binary files: never convert, never diff as text.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.bmp  binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.pth  binary
+*.pt   binary
+*.ckpt binary
+*.pyc  binary
+*.zip  binary
+*.gz   binary
